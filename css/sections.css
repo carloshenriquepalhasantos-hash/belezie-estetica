@@ -235,6 +235,34 @@
   margin-top: 0.25rem;
 }
 
+.footer-contact {
+  display: grid;
+  gap: 0.3rem;
+  max-width: 22rem;
+  font-size: var(--text-sm);
+}
+
+.footer-contact strong {
+  color: var(--color-cream-50);
+}
+
+.footer-contact address {
+  font-style: normal;
+  line-height: 1.55;
+}
+
+.footer-contact a {
+  color: inherit;
+}
+
+.footer-contact a:hover {
+  color: var(--color-gold-300);
+}
+
+.footer-contact p {
+  margin: 0;
+}
+
 .footer-links {
   display: flex;
   flex-wrap: wrap;
