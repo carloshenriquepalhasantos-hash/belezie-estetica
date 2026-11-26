@@ -61,6 +61,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  const protocolsGrid = document.getElementById('protocols-grid');
+  const mobileProtocolCards = window.matchMedia('(max-width: 600px)');
+
+  if (protocolsGrid && mobileProtocolCards.matches) {
+    let updateFrame = 0;
+
+    const updateCenteredCard = () => {
+      updateFrame = 0;
+      const cards = Array.from(protocolsGrid.querySelectorAll('.protocol-card'));
+      const viewportCenter = window.innerHeight / 2;
+      const activationDistance = window.innerHeight * 0.2;
+      let centeredCard = null;
+      let closestDistance = Infinity;
+
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+
+        const distance = Math.abs((rect.top + rect.bottom) / 2 - viewportCenter);
+        if (distance < closestDistance) {
+          centeredCard = card;
+          closestDistance = distance;
+        }
+      });
+
+      cards.forEach((card) => {
+        card.classList.toggle(
+          'is-centered',
+          card === centeredCard && closestDistance <= activationDistance
+        );
+      });
+    };
+
+    const scheduleCenteredCardUpdate = () => {
+      if (updateFrame) return;
+      updateFrame = window.requestAnimationFrame(updateCenteredCard);
+    };
+
+    window.addEventListener('scroll', scheduleCenteredCardUpdate, { passive: true });
+    window.addEventListener('resize', scheduleCenteredCardUpdate);
+    new MutationObserver(scheduleCenteredCardUpdate).observe(protocolsGrid, {
+      childList: true
+    });
+    scheduleCenteredCardUpdate();
+  }
+
   // 3. Fallback elegante caso assets/img/doutora.png não seja encontrada localmente
   document.querySelectorAll('img[src*="doutora.png"]').forEach((img) => {
     img.addEventListener('error', () => {
